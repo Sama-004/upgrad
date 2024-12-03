@@ -8,14 +8,67 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
+  Alert,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {mockUsers} from '../mocks/users';
+
+type RootStackParamList = {
+  Login: undefined;
+  Home: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
+  const navigation = useNavigation<NavigationProp>();
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+    general: '',
+  });
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {
+      username: '',
+      password: '',
+      general: '',
+    };
+
+    if (!username.trim()) {
+      newErrors.username = 'Username is required';
+      isValid = false;
+    }
+
+    if (!password.trim()) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleLogin = () => {
-    console.log('Login attempt with:', {email, password});
+    if (validateForm()) {
+      const user = mockUsers.find(
+        user => user.username === username && user.password === password,
+      );
+
+      if (user) {
+        setErrors({username: '', password: '', general: ''});
+        navigation.navigate('Home');
+      } else {
+        setErrors(prev => ({
+          ...prev,
+          general: 'Invalid username or password',
+        }));
+      }
+    }
   };
 
   return (
@@ -32,31 +85,42 @@ const LoginScreen = () => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, errors.username ? styles.inputError : null]}
             placeholder="Username"
             placeholderTextColor="#888"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
+            value={username}
+            onChangeText={text => {
+              setUsername(text);
+              setErrors(prev => ({...prev, username: '', general: ''}));
+            }}
             autoCapitalize="none"
           />
+          {errors.username ? (
+            <Text style={styles.errorText}>{errors.username}</Text>
+          ) : null}
         </View>
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, errors.password ? styles.inputError : null]}
             placeholder="Password"
             placeholderTextColor="#888"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={text => {
+              setPassword(text);
+              setErrors(prev => ({...prev, password: '', general: ''}));
+            }}
             secureTextEntry={true}
           />
-          {/* <TouchableOpacity
-            style={styles.eyeIcon}
-            onPress={() => setShowPass(!showPass)}>
-            Eye Icon goes here
-          </TouchableOpacity> */}
+          {errors.password ? (
+            <Text style={styles.errorText}>{errors.password}</Text>
+          ) : null}
         </View>
+
+        {errors.general ? (
+          <Text style={styles.errorText}>{errors.general}</Text>
+        ) : null}
+
         <TouchableOpacity>
           <Text style={styles.forgotPasswordText}>Forget Password?</Text>
         </TouchableOpacity>
@@ -111,7 +175,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#000000',
     textAlign: 'center',
     marginTop: 10,
     marginBottom: 30,
@@ -128,11 +192,6 @@ const styles = StyleSheet.create({
   },
   passwordContainer: {
     position: 'relative',
-  },
-  eyeIcon: {
-    position: 'absolute',
-    right: 15,
-    top: 15,
   },
   forgotPasswordText: {
     color: '#FF640D',
@@ -197,6 +256,16 @@ const styles = StyleSheet.create({
   signupLink: {
     color: '#FF6B00',
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  inputError: {
+    borderColor: 'red',
+    borderWidth: 1,
   },
 });
 
