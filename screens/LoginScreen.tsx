@@ -1,36 +1,39 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
+  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPass,setShowPass]=useState<boolean>(false);
 
   const handleLogin = () => {
-    console.log('Login attempt with:', { email, password });
+    console.log('Login attempt with:', {email, password});
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#f0f0f0" barStyle="dark-content" />
-
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <View style={styles.loginContainer}>
+        <Image
+          source={require('../assets/login/welcome_back.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
         <Text style={styles.title}>Welcome Back!</Text>
         <Text style={styles.subtitle}>Log in to your existent account</Text>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter your email"
+            placeholder="Username"
             placeholderTextColor="#888"
             value={email}
             onChangeText={setEmail}
@@ -40,27 +43,39 @@ const LoginScreen = () => {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter your password"
+            placeholder="Password"
             placeholderTextColor="#888"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
           />
+          {/* <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPass(!showPass)}>
+            Eye Icon goes here
+          </TouchableOpacity> */}
         </View>
-
-        <TouchableOpacity style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        <TouchableOpacity>
+          <Text style={styles.forgotPasswordText}>Forget Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={handleLogin}
-        >
-          <Text style={styles.loginButtonText}>Login</Text>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>LOG IN</Text>
         </TouchableOpacity>
+
+        <Text style={styles.orText}>Or connect using</Text>
+
+        <View style={styles.socialButtonsContainer}>
+          <TouchableOpacity style={[styles.socialButton, styles.googleButton]}>
+            <Text style={styles.googleText}>Google</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.socialButton, styles.facebookButton]}>
+            <Text style={styles.facebookText}>Facebook</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Don't have an account? </Text>
@@ -76,78 +91,111 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
   loginContainer: {
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-    borderRadius: 15,
+    flex: 1,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    alignSelf: 'center',
+    marginTop: 40,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
     textAlign: 'center',
-    marginBottom: 10,
+    marginTop: 20,
   },
   subtitle: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  input: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    fontSize: 16,
   },
   inputContainer: {
     marginBottom: 15,
   },
-  label: {
-    marginBottom: 5,
-    color: '#333',
-    fontWeight: '600',
+  passwordContainer: {
+    position: 'relative',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 12,
-    borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: 15,
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 15,
   },
   forgotPasswordText: {
-    color: '#007bff',
-    fontWeight: '600',
+    color: '#FF640D',
+    textAlign: 'right',
+    marginBottom: 20,
+    fontWeight: 'bold',
   },
   loginButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#FF6B00',
+    borderRadius: 25,
     padding: 15,
-    borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 20,
   },
   loginButtonText: {
-    color: 'white',
-    fontSize: 18,
+    color: '#F6F6F7',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  orText: {
+    textAlign: 'center',
+    color: '#000000',
+    marginBottom: 20,
+  },
+  socialButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  socialButton: {
+    flex: 0.48,
+    padding: 12,
+    borderRadius: 25,
+    alignItems: 'center',
+  },
+  googleButton: {
+    backgroundColor: '#FF6B00',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  facebookButton: {
+    backgroundColor: '#FF6B00',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  googleText: {
+    color: '#F6F6F7',
+    fontWeight: 'bold',
+  },
+  facebookText: {
+    color: '#F6F6F7',
     fontWeight: 'bold',
   },
   signupContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: 20,
   },
   signupText: {
     color: '#666',
   },
   signupLink: {
-    color: '#007bff',
+    color: '#FF6B00',
     fontWeight: 'bold',
   },
 });
