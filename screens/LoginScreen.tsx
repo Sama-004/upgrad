@@ -8,7 +8,6 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -61,7 +60,7 @@ const LoginScreen = () => {
 
       if (user) {
         setErrors({username: '', password: '', general: ''});
-        navigation.navigate('Home');
+        navigation.navigate('Home', {username});
       } else {
         setErrors(prev => ({
           ...prev,
