@@ -14,8 +14,9 @@ import {mockUsers} from '../../mocks/users';
 import {LoginStyle} from './LoginStyles';
 
 type RootStackParamList = {
+  Splash: undefined;
   Login: undefined;
-  Home: undefined;
+  Home: {username: string};
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
